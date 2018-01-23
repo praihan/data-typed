@@ -1,7 +1,4 @@
-import 'reflect-metadata';
-import Model from './model';
+export { IValidator, ModelMeta } from './-private/model';
 
-@Model()
-export default class DummyClass {
-
-}
+export { default as Model } from './-private/decorators/model';
+export { default as Required } from './-private/decorators/required';
