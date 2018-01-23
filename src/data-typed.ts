@@ -1,6 +1,7 @@
-// Import here Polyfills if needed. Recommended core-js (npm i -D core-js)
-  // import "core-js/fn/array.find"
-  // ...
+import 'reflect-metadata';
+import Model from './model';
+
+@Model()
 export default class DummyClass {
 
 }

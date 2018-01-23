@@ -12,8 +12,8 @@
     "emitDecoratorMetadata": true,
     "declarationDir": "dist/types",
     "outDir": "dist/es",
-    "typeRoots": [
-      "node_modules/@types"
+    "types": [
+      "reflect-metadata"
     ]
   },
   "include": [
