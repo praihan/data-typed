@@ -9,7 +9,7 @@ import 'mocha';
 describe('Dummy test', () => {
   it('works if true is truthy', () => {
     expect(true).to.be.true;
-  })
+  });
 
   it('DummyClass is instantiable', () => {
     expect(new DummyClass()).to.be.instanceof(DummyClass);
