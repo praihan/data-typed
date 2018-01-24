@@ -1,6 +1,6 @@
 import { Constructor } from './types';
 
-export const META_KEY = Symbol('ModelMeta');
+export const META_KEY = Symbol.for('ModelMeta');
 
 export interface IValidator<T> {
   validate(meta: ModelMeta, propertyKey: string, value: T): Error | null | undefined;

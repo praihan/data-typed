@@ -1,43 +1,45 @@
 import { Constructor } from '../types';
 import { ModelMeta } from '../model';
-import { getModelMeta } from './-helpers';
+import { modelMetaFor } from './-helpers';
 
 export default function modelDecorator<T extends Constructor>(): Function {
   return function Model(target: Constructor) {
+    createPrototypeAccessors(target);
     return class ModelClass extends target {
       constructor(...args: any[]) {
         super(...args);
-        verifyAllProperties(target, this);
-        makeAccessors(target, this);
+        validateAllProperties(target, this);
       }
     }
   };
 }
 
-function verifyAllProperties(target: Constructor, instance: any) {
-  const meta = getModelMeta(target);
+function createPrototypeAccessors(target: Constructor) {
+  const meta = modelMetaFor(target);
+  const prototype = target.prototype;
+
   for (let propertyKey of meta.propertyKeys) {
-    const err = meta.validate(propertyKey, instance[propertyKey]);
-    if (err != null) throw err;
+    const propertySymbol = meta.symbolForProperty(propertyKey);
+    prototype[propertySymbol] = prototype[propertyKey];
+
+    const closuredPropertyKey = propertyKey;
+    Object.defineProperty(prototype, propertyKey, {
+      get() {
+        return (this as any)[propertySymbol];
+      },
+      set(value: any) {
+        const err = meta.validate(closuredPropertyKey, value);
+        if (err != null) throw err;
+        (this as any)[propertySymbol] = value;
+      },
+    });
   }
 }
 
-function makeAccessors(target: Constructor, instance: any) {
-  const meta = getModelMeta(target);
+function validateAllProperties(target: Constructor, instance: any) {
+  const meta = modelMetaFor(target);
   for (let propertyKey of meta.propertyKeys) {
-    const propertySymbol = meta.symbolForProperty(propertyKey);
-    instance[propertySymbol] = instance[propertyKey];
-
-    Object.defineProperty(instance, propertyKey, {
-      enumerable: true,
-      get() {
-        return instance[propertySymbol];
-      },
-      set(value: any) {
-        const err = meta.validate(propertyKey, value);
-        if (err != null) throw err;
-        instance[propertySymbol] = value;
-      },
-    });
+    const err = meta.validate(propertyKey, instance[propertyKey]);
+    if (err != null) throw err;
   }
 }
