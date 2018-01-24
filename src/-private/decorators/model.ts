@@ -25,19 +25,19 @@ function verifyAllProperties(target: Constructor, instance: any) {
 function makeAccessors(target: Constructor, instance: any) {
   const meta = getModelMeta(target);
   for (let propertyKey of meta.propertyKeys) {
-    const backingPropertyKey = `__data-typed__${propertyKey}`;
-    instance[backingPropertyKey] = instance[propertyKey];
+    const propertySymbol = meta.symbolForProperty(propertyKey);
+    instance[propertySymbol] = instance[propertyKey];
 
     Object.defineProperty(instance, propertyKey, {
       configurable: false,
       enumerable: true,
       get() {
-        return instance[backingPropertyKey];
+        return instance[propertySymbol];
       },
       set(value: any) {
         const err = meta.validate(propertyKey, value);
         if (err != null) throw err;
-        instance[backingPropertyKey] = value;
+        instance[propertySymbol] = value;
       },
     });
   }
