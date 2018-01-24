@@ -10,14 +10,6 @@ import {
   Typed
 } from '../src/data-typed';
 
-class AggregateType {
-  constructor(properties?: {}) {
-    for (let key of Object.keys(properties || {})) {
-      (this as any)[key] = (properties as any)[key];
-    }
-  }
-}
-
 beforeEach((done) => {
   createSandbox();
   done();
@@ -27,6 +19,14 @@ afterEach((done) => {
   destroySandbox();
   done();
 });
+
+class AggregateType {
+  constructor(properties?: {}) {
+    for (let key of Object.keys(properties || {})) {
+      (this as any)[key] = (properties as any)[key];
+    }
+  }
+}
 
 describe('@Typed() test', () => {
   @Model() class ConcreteType extends AggregateType { @Typed() name: string; }
@@ -38,6 +38,22 @@ describe('@Typed() test', () => {
     expect(() => {
       @Model() class VirtualType extends AggregateType { @Typed() name: any; }
     }).to.throw('Could not determine type to check against VirtualType.name');
+  });
+
+  it('throws if type not explicitly specified and reflect-metadata is unavailable', () => {
+    const sandbox = getSandbox();
+    sandbox.stub(Reflect, 'getMetadata').get(() => undefined);
+    expect(() => {
+      @Model() class ConcreteType2 extends AggregateType { @Typed() name: string; }
+    }).to.throw('@Typed() requires explicit type in the absence of reflect-metadata');
+  });
+
+  it('works if type explicitly specified and reflect-metadata is unavailable', () => {
+    const sandbox = getSandbox();
+    sandbox.stub(Reflect, 'getMetadata').get(() => undefined);
+    expect(() => {
+      @Model() class ExplicitType2 extends AggregateType { @Typed(String) name: string; }
+    }).to.not.throw();
   });
 
   const types = [

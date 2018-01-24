@@ -3,7 +3,7 @@ import { modelMetaFor } from './-helpers';
 import { TypedValidator } from '../validators/typed';
 
 export default function typedDecorator(type?: Function): Function {
-  if (Reflect == null && type == null) {
+  if (Reflect.getMetadata == null && type == null) {
     throw TypeError('@Typed() requires explicit type in the absence of reflect-metadata');
   }
   return function (target: any, propertyKey: string) {
