@@ -14,6 +14,9 @@ export default function modelDecorator<T extends Constructor>(): Function {
   };
 }
 
+/**
+ * @hidden
+ */
 function createPrototypeAccessors(target: Constructor) {
   const meta = modelMetaFor(target);
   const prototype = target.prototype;
@@ -36,6 +39,9 @@ function createPrototypeAccessors(target: Constructor) {
   }
 }
 
+/**
+ * @hidden
+ */
 function validateAllProperties(target: Constructor, instance: any) {
   const meta = modelMetaFor(target);
   for (let propertyKey of meta.propertyKeys) {

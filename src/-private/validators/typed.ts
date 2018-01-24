@@ -1,5 +1,8 @@
 import { IValidator, ModelMeta } from '../model';
 
+/**
+ * @hidden
+ */
 const useTypeOfOperatorTypes: Function[] = [
   Boolean,
   Number,
