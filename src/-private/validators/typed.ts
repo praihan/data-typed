@@ -14,10 +14,9 @@ export class TypedValidator implements IValidator<any> {
     if (value == null) return;
     const makeError = () => TypeError(`${meta.target.name} requires ${propertyName} to be of type ${this.type.name}`);
     if (useTypeOfOperatorTypes.includes(this.type)) {
-      if (typeof value !== this.type.name.toLowerCase()) {
-        return makeError();
-      }
-      return;
+      return typeof value === this.type.name.toLowerCase() ?
+        null :
+        makeError();
     }
     if (!(value instanceof this.type)) {
       return makeError();
