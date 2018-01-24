@@ -29,7 +29,6 @@ function makeAccessors(target: Constructor, instance: any) {
     instance[propertySymbol] = instance[propertyKey];
 
     Object.defineProperty(instance, propertyKey, {
-      configurable: false,
       enumerable: true,
       get() {
         return instance[propertySymbol];

@@ -1,5 +1,3 @@
 require('ts-node').register({
-  compilerOptions: {
-    module: 'commonjs',
-  },
+  project: `${__dirname}/../tsconfig.json`,
 });
